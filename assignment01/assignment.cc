@@ -9,7 +9,9 @@
 
 #include "assignment.hh"
 
-void task::drawScene(int scene, float runTime) {}
+void task::drawScene(int scene, float runTime) {
+    std::cout << "Scene: " << scene << " Time: " << runTime << std::endl;
+}
 
 void task::initCustomResources() {}
 
