@@ -7,7 +7,6 @@
 #
 # If this file is malformatted, the assignment will not be graded at all.
 
-#123456 John Doe
 398930 Lukas Schnelle
 377563 Jonas Nießen
 377270 Michael Schlößer
