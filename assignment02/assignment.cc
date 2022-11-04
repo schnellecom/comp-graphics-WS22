@@ -14,7 +14,7 @@
 glm::mat4x4 scalingMatrix(float scale){
     glm::mat4 matrix = glm::mat4(scale, 0, 0, 0,
                                  0, scale, 0, 0,
-                                 0, 0, scale, 0,
+                                 0, 0, 1, 0,
                                  0, 0, 0, 1);
     return matrix;
 }
