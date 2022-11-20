@@ -43,6 +43,62 @@ glm::mat4 getRotationMatrixYAxis(float angle)
     return r;
 }
 
+float norm(glm::vec4 v){
+    float r;
+    r = std::pow(v[0], 2);
+    r += std::pow(v[1], 2);
+    r += std::pow(v[2], 2);
+    r = std::sqrt(r);
+    return r;
+}
+
+glm::vec4 normalize(glm::vec4 v){
+    return v.operator/=(norm(v));
+}
+
+glm::vec3 crossProduct(glm::vec3 v, glm::vec3 w){
+    glm::vec3 p;
+    p[0] = v[1]*w[2] - v[2]*w[1];
+    p[1] = v[2]*w[0] - v[0]*w[2];
+    p[2] = v[0]*w[1] - v[1]*w[0];
+
+    return p;
+}
+
+glm::vec4 crossProduct(glm::vec4 v, glm::vec4 w){
+    glm::vec4 p;
+    p[0] = v[1]*w[2] - v[2]*w[1];
+    p[1] = v[2]*w[0] - v[0]*w[2];
+    p[2] = v[0]*w[1] - v[1]*w[0];
+    p[3] = 0;
+
+    return p;
+}
+
+glm::vec4 toVector(glm::vec3 v){
+    glm::vec4 r;
+    r[0] = v[0];
+    r[1] = v[1];
+    r[2] = v[2];
+    r[3] = 0;
+}
+
+glm::vec4 toPoint(glm::vec3 v){
+    glm::vec4 r;
+    r[0] = v[0];
+    r[1] = v[1];
+    r[2] = v[2];
+    r[3] = 0;
+}
+
+glm::mat4x4 translationMatrix(float x, float y, float z){
+    glm::mat4 matrix = glm::mat4(1, 0, 0, 0,
+                                 0, 1, 0, 0,
+                                 0, 0, 1, 0,
+                                 x, y, z, 1);
+    return matrix;
+}
+
 
 /*
  * A white circle represents the track center line
@@ -208,6 +264,20 @@ glm::mat4 lookAt(const glm::vec3& camPos, const glm::vec3& viewDirection, const 
     // Lookat for programming exercise part a:
     // Add your code here:
     // ====================================================================
+
+    //transform to homogeneous coords
+    glm::vec4 C = toPoint(camPos);
+    C = normalize(C);
+    glm::vec4 D = toVector(viewDirection);
+    D = normalize(D);
+    glm::vec4 U = toVector(up);
+    C = normalize(C);
+
+    glm::vec4 R = crossProduct(U, D);
+    glm::vec4 Unew = crossProduct(R, D);
+
+    glm::mat4 T = translationMatrix(-C[0], -C[1], -C[2]);
+
 
     return glm::mat4(1.f);
 
