@@ -58,12 +58,15 @@ float norm(glm::vec4 v){
     r = std::pow(v[0], 2);
     r += std::pow(v[1], 2);
     r += std::pow(v[2], 2);
-    r = std::sqrt(r);
+    r += std::sqrt(r);
     return r;
 }
 
 glm::vec4 normalize(glm::vec4 v){
-    return v.operator/=(norm(v));
+    if(norm(v) != 0) {
+        return v.operator*=(std::pow(norm(v), -1));
+    }
+    return v;
 }
 
 glm::vec3 crossProduct(glm::vec3 v, glm::vec3 w){
@@ -91,6 +94,8 @@ glm::vec4 toVector(glm::vec3 v){
     r[1] = v[1];
     r[2] = v[2];
     r[3] = 0;
+
+    return r;
 }
 
 glm::vec4 toPoint(glm::vec3 v){
@@ -99,6 +104,8 @@ glm::vec4 toPoint(glm::vec3 v){
     r[1] = v[1];
     r[2] = v[2];
     r[3] = 0;
+
+    return r;
 }
 
 glm::mat4x4 translationMatrix(float x, float y, float z){
@@ -108,7 +115,6 @@ glm::mat4x4 translationMatrix(float x, float y, float z){
                                  x, y, z, 1);
     return matrix;
 }
-
 
 /*
  * A white circle represents the track center line
@@ -133,7 +139,6 @@ void drawGrandstand(const glm::mat4& model, const glm::mat4& view, const glm::ma
 {
     drawCircle(glm::vec3(0.4, 0.4, 0.4), model, view, projection);
 }
-
 
 void drawTrack()
 {
@@ -305,8 +310,10 @@ glm::mat4 lookAt(const glm::vec3& camPos, const glm::vec3& viewDirection, const 
     C = normalize(C);
 
     //calculate the camera coordinate system
-    glm::vec4 R = crossProduct(U, D);
+    glm::vec4 R = crossProduct(D, U);
+    R = normalize(R);
     U = crossProduct(R, D);
+    U = normalize(U);
 
 //    glm::mat4 T = translationMatrix(-C[0], -C[1], -C[2]);
 
@@ -364,7 +371,9 @@ void task::drawScene(int scene, float runTime)
         // static camera for programming exercise part c:
         // Add your code here:
         // =====================================================
-        viewMatrix = lookAt(glm::vec3(0, -1, 1), glm::vec3(0, 1, -1), glm::vec3(0,0,1));
+        viewMatrix = lookAt(glm::vec3(0, -1, 1),
+                            glm::vec3(0, 1, -1),
+                            glm::vec3(0,1,0));
 
         // =====================================================
         // End Exercise code
