@@ -43,33 +43,33 @@ glm::mat4 getRotationMatrixYAxis(float angle)
     return r;
 }
 
-float scalar(glm::vec4 v, glm::vec4 w){
+float scalar(const glm::vec4 &v, const glm::vec4 &w){
     float res = 0;
     res += v[0]*w[0];
     res += v[1]*w[1];
     res += v[2]*w[2];
-    res += v[3]*w[3];
+//    res += v[3]*w[3];
 
     return res;
 }
 
-float norm(glm::vec4 v){
+float norm(const glm::vec4 &v){
     float r;
     r = std::pow(v[0], 2);
     r += std::pow(v[1], 2);
     r += std::pow(v[2], 2);
-    r += std::sqrt(r);
+    r = std::sqrt(r);
     return r;
 }
 
-glm::vec4 normalize(glm::vec4 v){
+glm::vec4 normalize(glm::vec4 &v){
     if(norm(v) != 0) {
         return v.operator*=(std::pow(norm(v), -1));
     }
     return v;
 }
 
-glm::vec3 crossProduct(glm::vec3 v, glm::vec3 w){
+glm::vec3 crossProduct(const glm::vec3 &v, const glm::vec3 &w){
     glm::vec3 p;
     p[0] = v[1]*w[2] - v[2]*w[1];
     p[1] = v[2]*w[0] - v[0]*w[2];
@@ -78,7 +78,7 @@ glm::vec3 crossProduct(glm::vec3 v, glm::vec3 w){
     return p;
 }
 
-glm::vec4 crossProduct(glm::vec4 v, glm::vec4 w){
+glm::vec4 crossProduct(const glm::vec4 &v, const glm::vec4 &w){
     glm::vec4 p;
     p[0] = v[1]*w[2] - v[2]*w[1];
     p[1] = v[2]*w[0] - v[0]*w[2];
@@ -88,7 +88,7 @@ glm::vec4 crossProduct(glm::vec4 v, glm::vec4 w){
     return p;
 }
 
-glm::vec4 toVector(glm::vec3 v){
+glm::vec4 toVector(const glm::vec3 &v){
     glm::vec4 r;
     r[0] = v[0];
     r[1] = v[1];
@@ -98,12 +98,12 @@ glm::vec4 toVector(glm::vec3 v){
     return r;
 }
 
-glm::vec4 toPoint(glm::vec3 v){
+glm::vec4 toPoint(const glm::vec3 &v){
     glm::vec4 r;
     r[0] = v[0];
     r[1] = v[1];
     r[2] = v[2];
-    r[3] = 0;
+    r[3] = 1;
 
     return r;
 }
@@ -273,10 +273,10 @@ glm::mat4 buildFrustum(float phiInDegree, float aspectRatio, float near, float f
     float B = b*(far/near);
 
     //compute r, l according to aspect ratio
-    float heigth = 2*(near*std::tan(phiInDegree/2));
-    float width = aspectRatio*heigth;
-    float r = width;
-    float l = -width;
+    float height = 2 * (near * std::tan(phiInDegree / 2));
+    float width = aspectRatio * height;
+    float r = width/2;
+    float l = -width/2;
 
     glm::mat4 res(0.0f);
     res[0][0] = (2*near)/(r-l);
@@ -355,7 +355,7 @@ void task::resizeCallback(int newWidth, int newHeight)
     // projection matrix setup for programming exercise part d:
     // Add your code here:
     // ====================================================================
-
+    projectionMatrix = buildFrustum(90, (newWidth/newHeight), 0.5, 2);
     // ====================================================================
     // End Exercise code
     // ====================================================================
