@@ -43,6 +43,16 @@ glm::mat4 getRotationMatrixYAxis(float angle)
     return r;
 }
 
+float scalar(glm::vec4 v, glm::vec4 w){
+    float res = 0;
+    res += v[0]*w[0];
+    res += v[1]*w[1];
+    res += v[2]*w[2];
+    res += v[3]*w[3];
+
+    return res;
+}
+
 float norm(glm::vec4 v){
     float r;
     r = std::pow(v[0], 2);
@@ -251,11 +261,32 @@ glm::mat4 buildFrustum(float phiInDegree, float aspectRatio, float near, float f
     // Add your code here:
     // ====================================================================
 
+    //setup matrix as in slide 44, lecture 03 perspektive
+    float t = near*std::tan(phiInDegree/2);
+    float b = -t;
+    float T = t*(far/near);
+    float B = b*(far/near);
+
+    //compute r, l according to aspect ratio
+    float heigth = 2*(near*std::tan(phiInDegree/2));
+    float width = aspectRatio*heigth;
+    float r = width;
+    float l = -width;
+
+    glm::mat4 res(0.0f);
+    res[0][0] = (2*near)/(r-l);
+    res[1][1] = (2*near)/(t-b);
+    res[0][2] = (r+l)/(r-l);
+    res[1][2] = (t+b)/(t-b);
+    res[2][2] = -(far+near)/(far-near);
+    res[3][2] = -1;
+    res[2][3] = -(2*far*near)/(far-near);
+
     // ====================================================================
     // End Exercise code
     // ====================================================================
 
-    return fm;
+    return res;
 }
 
 glm::mat4 lookAt(const glm::vec3& camPos, const glm::vec3& viewDirection, const glm::vec3& up)
@@ -273,13 +304,33 @@ glm::mat4 lookAt(const glm::vec3& camPos, const glm::vec3& viewDirection, const 
     glm::vec4 U = toVector(up);
     C = normalize(C);
 
+    //calculate the camera coordinate system
     glm::vec4 R = crossProduct(U, D);
-    glm::vec4 Unew = crossProduct(R, D);
+    U = crossProduct(R, D);
 
-    glm::mat4 T = translationMatrix(-C[0], -C[1], -C[2]);
+//    glm::mat4 T = translationMatrix(-C[0], -C[1], -C[2]);
 
+    //new approach with script page 23
+    glm::mat4 T(0.0f);
+    T[0][0] = R[0];
+    T[0][1] = R[1];
+    T[0][2] = R[2];
 
-    return glm::mat4(1.f);
+    T[1][0] = U[0];
+    T[1][1] = U[1];
+    T[1][2] = U[2];
+
+    T[2][0] = -D[0];
+    T[2][1] = -D[1];
+    T[2][2] = -D[2];
+
+    T[0][3] = scalar(-R, C);
+    T[1][3] = scalar(-U, C);
+    T[2][3] = scalar(D, C);
+
+    T[3][3] = 1;
+
+    return T;
 
     // ====================================================================
     // End Exercise code
@@ -313,7 +364,7 @@ void task::drawScene(int scene, float runTime)
         // static camera for programming exercise part c:
         // Add your code here:
         // =====================================================
-
+        viewMatrix = lookAt(glm::vec3(0, -1, 1), glm::vec3(0, 1, -1), glm::vec3(0,0,1));
 
         // =====================================================
         // End Exercise code
