@@ -44,7 +44,15 @@ float evaluateF(const glm::vec2& p1, const glm::vec2& p2, const glm::vec2& p)
     // Add your code here:
     // ====================================================================
 
-    return 0;
+    //calculate the line
+    float dx = p2[0] - p1[0];
+    float dy = p2[1] - p1[1];
+    float m = dy/dx;
+    float t = -p1[0]*m + p1[1];
+
+    float res = p[0]*m + t - p[1];
+
+    return res;
 
     // ====================================================================
     // End Exercise code
@@ -65,10 +73,10 @@ void drawTriangle(const glm::vec4& p0_in, const glm::vec4& p1_in, const glm::vec
     const glm::vec2 v2 = glm::vec2(p2_in[0], p2_in[1]);
 
     // rasterizer initialized from minX to maxX and minY to MaxY
-    int minX = 0;
-    int minY = 0;
-    int maxX = windowWidth;
-    int maxY = windowHeight;
+    int minX = floor(p0_in[0]);
+    int minY = floor(p0_in[1]);
+    int maxX = ceil(p0_in[0]);
+    int maxY = ceil(p0_in[1]);
 
     // Diffuse lighting coefficient
     float diffuse = 1.0;
@@ -78,7 +86,47 @@ void drawTriangle(const glm::vec4& p0_in, const glm::vec4& p1_in, const glm::vec
     // Assignment section b
     // Add your code here:
     // ====================================================================
+    //for minx
+    if(p1_in[0] < minX){
+        minX = floor(p1_in[0]);
+    }
+    else if(p2_in[0] < minX){
+        minX = floor(p2_in[0]);
+    }
+    else if(0 > minX){
+        minX = 0;
+    }
+    //maxX
+    if(p1_in[0] > maxX){
+        maxX = ceil(p1_in[0]);
+    }
+    else if(p2_in[0] > maxX){
+        maxX = ceil(p2_in[0]);
+    }
+    else if(windowWidth < maxX){
+        maxX = windowWidth;
+    }
 
+    //for miny
+    if(p1_in[1] < minY){
+        minY = floor(p1_in[1]);
+    }
+    else if(p2_in[1] < minY){
+        minY = floor(p2_in[1]);
+    }
+    else if(0 > minY){
+        minY = 0;
+    }
+    //maxY
+    if(p1_in[1] > maxY){
+        maxY = ceil(p1_in[1]);
+    }
+    else if(p2_in[1] > maxY){
+        maxY = ceil(p2_in[1]);
+    }
+    else if(windowHeight < maxY){
+        maxY = windowHeight;
+    }
     // ====================================================================
     // End Exercise code
     // ====================================================================
@@ -89,7 +137,10 @@ void drawTriangle(const glm::vec4& p0_in, const glm::vec4& p1_in, const glm::vec
     // Assignment section f
     // Add your code here:
     // ====================================================================
-
+    diffuse = normal[2];
+    if(diffuse<0){
+        return;
+    }
     // ====================================================================
     // End Exercise code
     // ====================================================================
@@ -109,7 +160,14 @@ void drawTriangle(const glm::vec4& p0_in, const glm::vec4& p1_in, const glm::vec
 
             // Use this function to draw the pixel
             // Do not modify it, just call it if you want to draw the pixel given by p
-            setPixel(p[0], p[1], diffuse * color);
+
+            if(evaluateF(v0, v1, p)<0) {
+                if(evaluateF(v1, v2, p)<0){
+                    if(evaluateF(v2, v0, p)<0){
+                        setPixel(p[0], p[1], diffuse * color);
+                    }
+                }
+            }
 
             // ====================================================================
             // End Exercise code
@@ -142,6 +200,27 @@ void task::drawScene(int _scene, float _runTime)
     // Assignment section e
     // Add your code here:
     // ====================================================================
+    glm::vec2 p;
+    for (p[1] = 0; p[1] <= windowWidth; p[1]++)
+    {
+        for (p[0] = 0; p[0] <= windowHeight; p[0]++)
+        {
+            // =========================================================================
+            // Draw current pixel?
+            // Assignment section c
+            // Add your code here:
+            // ====================================================================
+
+            // Use this function to draw the pixel
+            // Do not modify it, just call it if you want to draw the pixel given by p
+
+            setPixel(p[0], p[1], glm::vec3(0,0,0));
+
+            // ====================================================================
+            // End Exercise code
+            // ====================================================================
+        }
+    }
 
     // ====================================================================
     // End Exercise code
@@ -162,6 +241,7 @@ void task::drawScene(int _scene, float _runTime)
     // one vertex consists of 9 floats:
     g_bunnyStrideSize = 9;
 
+
     if ((_scene == 2) || (_scene == 3))
     {
         // =========================================================================
@@ -169,7 +249,11 @@ void task::drawScene(int _scene, float _runTime)
         // Assignment section d
         // Add your code here:
         // ====================================================================
-
+        glm::mat4 rotate = glm::mat4(std::cos(_runTime),     0,  -std::sin(_runTime),  0,
+                                     0,                         1,  0,                       0,
+                                     std::sin(_runTime),     0,  std::cos(_runTime),   0,
+                                     0,0,0,1);
+        modelViewMatrix = modelViewMatrix*rotate;
         // ====================================================================
         // End Exercise code
         // ====================================================================
