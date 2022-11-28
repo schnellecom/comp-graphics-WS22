@@ -90,20 +90,20 @@ void drawTriangle(const glm::vec4& p0_in, const glm::vec4& p1_in, const glm::vec
     if(p1_in[0] < (float)minX){
         minX = floor(p1_in[0]);
     }
-    else if(p2_in[0] < (float)minX){
+    if(p2_in[0] < (float)minX){
         minX = floor(p2_in[0]);
     }
-    else if(0 > minX){
+    if(0 > minX){
         minX = 0;
     }
     //maxX
     if(p1_in[0] > (float)maxX){
         maxX = ceil(p1_in[0]);
     }
-    else if(p2_in[0] > (float)maxX){
+    if(p2_in[0] > (float)maxX){
         maxX = ceil(p2_in[0]);
     }
-    else if(windowWidth < maxX){
+    if(windowWidth < maxX){
         maxX = windowWidth;
     }
 
@@ -111,20 +111,20 @@ void drawTriangle(const glm::vec4& p0_in, const glm::vec4& p1_in, const glm::vec
     if(p1_in[1] < (float)minY){
         minY = floor(p1_in[1]);
     }
-    else if(p2_in[1] < (float)minY){
+    if(p2_in[1] < (float)minY){
         minY = floor(p2_in[1]);
     }
-    else if(0 > minY){
+    if(0 > minY){
         minY = 0;
     }
     //maxY
     if(p1_in[1] > (float)maxY){
         maxY = ceil(p1_in[1]);
     }
-    else if(p2_in[1] > (float)maxY){
+    if(p2_in[1] > (float)maxY){
         maxY = ceil(p2_in[1]);
     }
-    else if(windowHeight < maxY){
+    if(windowHeight < maxY){
         maxY = windowHeight;
     }
     // ====================================================================
@@ -204,22 +204,8 @@ void task::drawScene(int _scene, float _runTime)
     int P1;
     for (P1 = 0; P1 <= windowWidth; P1++)
     {
-        for (P0 = 0; P0 <= windowHeight; P0++)
-        {
-            // =========================================================================
-            // Draw current pixel?
-            // Assignment section c
-            // Add your code here:
-            // ====================================================================
-
-            // Use this function to draw the pixel
-            // Do not modify it, just call it if you want to draw the pixel given by p
-
+        for (P0 = 0; P0 <= windowHeight; P0++){
             setPixel(P0, P1, glm::vec3(0,0,0));
-
-            // ====================================================================
-            // End Exercise code
-            // ====================================================================
         }
     }
 
