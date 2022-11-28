@@ -87,20 +87,20 @@ void drawTriangle(const glm::vec4& p0_in, const glm::vec4& p1_in, const glm::vec
     // Add your code here:
     // ====================================================================
     //for minx
-    if(p1_in[0] < minX){
+    if(p1_in[0] < (float)minX){
         minX = floor(p1_in[0]);
     }
-    else if(p2_in[0] < minX){
+    else if(p2_in[0] < (float)minX){
         minX = floor(p2_in[0]);
     }
     else if(0 > minX){
         minX = 0;
     }
     //maxX
-    if(p1_in[0] > maxX){
+    if(p1_in[0] > (float)maxX){
         maxX = ceil(p1_in[0]);
     }
-    else if(p2_in[0] > maxX){
+    else if(p2_in[0] > (float)maxX){
         maxX = ceil(p2_in[0]);
     }
     else if(windowWidth < maxX){
@@ -108,20 +108,20 @@ void drawTriangle(const glm::vec4& p0_in, const glm::vec4& p1_in, const glm::vec
     }
 
     //for miny
-    if(p1_in[1] < minY){
+    if(p1_in[1] < (float)minY){
         minY = floor(p1_in[1]);
     }
-    else if(p2_in[1] < minY){
+    else if(p2_in[1] < (float)minY){
         minY = floor(p2_in[1]);
     }
     else if(0 > minY){
         minY = 0;
     }
     //maxY
-    if(p1_in[1] > maxY){
+    if(p1_in[1] > (float)maxY){
         maxY = ceil(p1_in[1]);
     }
-    else if(p2_in[1] > maxY){
+    else if(p2_in[1] > (float)maxY){
         maxY = ceil(p2_in[1]);
     }
     else if(windowHeight < maxY){
@@ -200,10 +200,11 @@ void task::drawScene(int _scene, float _runTime)
     // Assignment section e
     // Add your code here:
     // ====================================================================
-    glm::vec2 p;
-    for (p[1] = 0; p[1] <= windowWidth; p[1]++)
+    int P0;
+    int P1;
+    for (P1 = 0; P1 <= windowWidth; P1++)
     {
-        for (p[0] = 0; p[0] <= windowHeight; p[0]++)
+        for (P0 = 0; P0 <= windowHeight; P0++)
         {
             // =========================================================================
             // Draw current pixel?
@@ -214,7 +215,7 @@ void task::drawScene(int _scene, float _runTime)
             // Use this function to draw the pixel
             // Do not modify it, just call it if you want to draw the pixel given by p
 
-            setPixel(p[0], p[1], glm::vec3(0,0,0));
+            setPixel(P0, P1, glm::vec3(0,0,0));
 
             // ====================================================================
             // End Exercise code
@@ -249,11 +250,15 @@ void task::drawScene(int _scene, float _runTime)
         // Assignment section d
         // Add your code here:
         // ====================================================================
-        glm::mat4 rotate = glm::mat4(std::cos(_runTime),     0,  -std::sin(_runTime),  0,
-                                     0,                         1,  0,                       0,
-                                     std::sin(_runTime),     0,  std::cos(_runTime),   0,
-                                     0,0,0,1);
-        modelViewMatrix = modelViewMatrix*rotate;
+//        glm::mat4 rotate = glm::mat4(std::cos(std::floor(_runTime)),     0,  -std::sin(std::floor(_runTime)),  0,
+//                                     0,                         1,  0,                       0,
+//                                     std::sin(std::floor(_runTime)),     0,  std::cos(std::floor(_runTime)),   0,
+//                                     0,0,0,1);
+        //modelViewMatrix = modelViewMatrix*rotate;
+        modelViewMatrix.operator*=(glm::mat4(std::cos(std::floor(_runTime)),     0,  -std::sin(std::floor(_runTime)),  0,
+                                             0,                         1,  0,                       0,
+                                             std::sin(std::floor(_runTime)),     0,  std::cos(std::floor(_runTime)),   0,
+                                             0,0,0,1));
         // ====================================================================
         // End Exercise code
         // ====================================================================
