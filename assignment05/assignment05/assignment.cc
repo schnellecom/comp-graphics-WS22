@@ -45,14 +45,14 @@ float evaluateF(const glm::vec2& p1, const glm::vec2& p2, const glm::vec2& p)
     // ====================================================================
 
     //calculate the line
-    float dx = p2[0] - p1[0];
-    float dy = p2[1] - p1[1];
+    float dx = std::abs(p2[0] - p1[0]);
+    float dy = std::abs(p2[1] - p1[1]);
     float m = dy/dx;
     float t = -p1[0]*m + p1[1];
 
-    float res = p[0]*m + t - p[1];
+    float res = - (p[0]*m + t) + p[1];
 
-    return res;
+    return -res;
 
     // ====================================================================
     // End Exercise code
@@ -86,22 +86,23 @@ void drawTriangle(const glm::vec4& p0_in, const glm::vec4& p1_in, const glm::vec
     // Assignment section b
     // Add your code here:
     // ====================================================================
+    int eps = 2;
     //for minx
     if(p1_in[0] < (float)minX){
-        minX = floor(p1_in[0]);
+        minX = floor(p1_in[0])-eps;
     }
     if(p2_in[0] < (float)minX){
-        minX = floor(p2_in[0]);
+        minX = floor(p2_in[0])-eps;
     }
     if(0 > minX){
         minX = 0;
     }
     //maxX
     if(p1_in[0] > (float)maxX){
-        maxX = ceil(p1_in[0]);
+        maxX = ceil(p1_in[0])+eps;
     }
     if(p2_in[0] > (float)maxX){
-        maxX = ceil(p2_in[0]);
+        maxX = ceil(p2_in[0])+eps;
     }
     if(windowWidth < maxX){
         maxX = windowWidth;
@@ -109,20 +110,20 @@ void drawTriangle(const glm::vec4& p0_in, const glm::vec4& p1_in, const glm::vec
 
     //for miny
     if(p1_in[1] < (float)minY){
-        minY = floor(p1_in[1]);
+        minY = floor(p1_in[1])-eps;
     }
     if(p2_in[1] < (float)minY){
-        minY = floor(p2_in[1]);
+        minY = floor(p2_in[1])-eps;
     }
     if(0 > minY){
         minY = 0;
     }
     //maxY
     if(p1_in[1] > (float)maxY){
-        maxY = ceil(p1_in[1]);
+        maxY = ceil(p1_in[1])+eps;
     }
     if(p2_in[1] > (float)maxY){
-        maxY = ceil(p2_in[1]);
+        maxY = ceil(p2_in[1])+eps;
     }
     if(windowHeight < maxY){
         maxY = windowHeight;
