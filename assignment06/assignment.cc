@@ -11,8 +11,17 @@ bool convex(const glm::vec2& prev, const glm::vec2& curr, const glm::vec2& next)
 {
     // True iff the vertex curr is a convex corner.
     // Assume counter-clockwise vertex order.
+    glm::vec2 diffPrevCurr = curr - prev;
+    glm::vec2 diffNextCurr = next - curr;
 
-    return false;
+    double isConvex = diffPrevCurr[0]*diffNextCurr[1] - diffPrevCurr[1]*diffNextCurr[0];
+
+    if(isConvex > 0){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 bool inTriangle(const glm::vec2& p, const glm::vec2& a, const glm::vec2& b, const glm::vec2& c)
