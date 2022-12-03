@@ -14,7 +14,7 @@ bool convex(const glm::vec2& prev, const glm::vec2& curr, const glm::vec2& next)
     glm::vec2 diffPrevCurr = curr - prev;
     glm::vec2 diffNextCurr = next - curr;
 
-    double isConvex = diffPrevCurr[0]*diffNextCurr[1] - diffPrevCurr[1]*diffNextCurr[0];
+    float isConvex = diffPrevCurr[0]*diffNextCurr[1] - diffPrevCurr[1]*diffNextCurr[0];
 
     if(isConvex > 0){
         return true;
@@ -29,14 +29,29 @@ bool inTriangle(const glm::vec2& p, const glm::vec2& a, const glm::vec2& b, cons
     // True iff the point p lies within the triangle a, b, c.
     // Assume counter-clockwise vertex order.
 
-    return false;
+    float alpha = ((b[1] - c[1])*(p[0] - c[0]) + (c[0] - b[0])*(p[1] - c[1])) /
+                  ((b[1] - c[1])*(a[0] - c[0]) + (c[0] - b[0])*(a[1] - c[1]));
+    float beta = ((c[1] - a[1])*(p[0] - c[0]) + (a[0] - c[0])*(p[1] - c[1])) /
+                 ((b[1] - c[1])*(a[0] - c[0]) + (c[0] - b[0])*(a[1] - c[1]));
+    float gamma = 1.0f - alpha - beta;
+
+    if(alpha > 0 && beta > 0 && gamma > 0){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 bool triangleEmpty(const int i_a, const int i_b, const int i_c, const std::vector<glm::vec2>& vertices)
 {
     // True iff there is no other vertex inside the triangle a, b, c.
-
-    return false;
+    for(int i = 0; i < vertices.size(); i++){
+        if(!inTriangle(vertices[i], vertices[i_a], vertices[i_b], vertices[i_c]) && i != i_a && i != i_b && i != i_c){
+            return false;
+        }
+    }
+    return true;
 }
 
 void triangulate(const std::vector<glm::vec2>& vertices, std::vector<int>& triangles)
