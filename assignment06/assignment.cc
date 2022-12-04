@@ -60,7 +60,7 @@ size_t prevnode(const size_t& i, const std::vector<bool>& clipped)
     size_t n = clipped.size();
     size_t res;
 
-    if(res == 0){
+    if(i == 0){
         res = n-1;
     }else{
         res = i-1;
@@ -86,7 +86,11 @@ size_t nextnode(const size_t& i, const std::vector<bool>& clipped)
         res = i+1;
     }
     while(clipped[res]){
-        res += 1;
+        if(res == n-1){
+            res = 0;
+        }else{
+            res +=1;
+        }
     }
     return res;
 }
