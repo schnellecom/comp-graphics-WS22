@@ -3,6 +3,7 @@
  */
  
 #include "assignment.hh"
+#include <algorithm>
 
 namespace task
 {
@@ -54,6 +55,38 @@ bool triangleEmpty(const int i_a, const int i_b, const int i_c, const std::vecto
     return true;
 }
 
+size_t prevnode(const size_t& i, const std::vector<bool>& clipped)
+{
+    size_t n = clipped.size();
+    size_t res;
+
+    if(i == 0){
+        res = n-1;
+    }else{
+        res = i-1;
+    }
+    while(clipped[res]){
+        res -= 1;
+    }
+    return res;
+}
+
+size_t nextnode(const size_t& i, const std::vector<bool>& clipped)
+{
+    size_t n = clipped.size();
+    size_t res;
+
+    if(i == n-1){
+        res = 0;
+    }else{
+        res = i+1;
+    }
+    while(clipped[res]){
+        res += 1;
+    }
+    return res;
+}
+
 void triangulate(const std::vector<glm::vec2>& vertices, std::vector<int>& triangles)
 {
     // Loop through vertices and clip away ears until only two vertices are left.
@@ -70,24 +103,27 @@ void triangulate(const std::vector<glm::vec2>& vertices, std::vector<int>& trian
     // True iff the vertex has been clipped.
     std::vector<bool> clipped(n, false);
 
-    for(int i=0; i < n; i++){
-        int curr = i;
-        int next = i;
-        int prev = i;
+    size_t i = 0;
 
-        if(curr == 0){
-            prev = n - 1;
-        }
-        else{
-            prev = curr - 1;
-        }
-        if(curr = n-1){
-            next = 0;
-        }
-        else{
-            next = curr + 1;
+    while(std::count(clipped.begin(), clipped.end(), false) > 2){
+        if(!clipped[i]) {
+            size_t curr = i;
+            size_t prev = prevnode(i, clipped);
+            size_t next = nextnode(i, clipped);
+
+            if(convex(vertices[prev], vertices[curr], vertices[next]) && triangleEmpty(prev, curr, next, vertices)){
+                triangles.push_back(prev);
+                triangles.push_back(curr);
+                triangles.push_back(next);
+                clipped[curr] = true;
+
+                i = next;
+            }
+        }else{
+            i++;
         }
     }
+
 
 }
 
