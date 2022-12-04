@@ -119,13 +119,6 @@ void triangulate(const std::vector<glm::vec2>& vertices, std::vector<int>& trian
             size_t prev = prevnode(i, clipped);
             size_t next = nextnode(i, clipped);
 
-
-            /* std::cout << "previous: " << prev << ", current: " << curr << ", next: " << next << std::endl;
-            for(int l = 0; l < n; l++){
-                std::cout << clipped[l] << ",";
-            }
-            std::cout << std::endl;
-            */
             if(convex(vertices[prev], vertices[curr], vertices[next]) && triangleEmpty(prev, curr, next, vertices)){
                 triangles.push_back(prev);
                 triangles.push_back(curr);
