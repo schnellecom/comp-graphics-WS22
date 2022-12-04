@@ -48,7 +48,7 @@ bool triangleEmpty(const int i_a, const int i_b, const int i_c, const std::vecto
 {
     // True iff there is no other vertex inside the triangle a, b, c.
     for(int i = 0; i < vertices.size(); i++){
-        if(!inTriangle(vertices[i], vertices[i_a], vertices[i_b], vertices[i_c]) && i != i_a && i != i_b && i != i_c){
+        if(inTriangle(vertices[i], vertices[i_a], vertices[i_b], vertices[i_c]) && i != i_a && i != i_b && i != i_c){
             return false;
         }
     }
@@ -111,14 +111,19 @@ void triangulate(const std::vector<glm::vec2>& vertices, std::vector<int>& trian
             size_t prev = prevnode(i, clipped);
             size_t next = nextnode(i, clipped);
 
+            std::cout << "previous: " << prev << ", current: " << curr << ", next: " << next << std::endl;
+            for(int l = 0; l < n; l++){
+                std::cout << clipped[l] << ",";
+            }
+            std::cout << std::endl;
             if(convex(vertices[prev], vertices[curr], vertices[next]) && triangleEmpty(prev, curr, next, vertices)){
                 triangles.push_back(prev);
                 triangles.push_back(curr);
                 triangles.push_back(next);
                 clipped[curr] = true;
-
-                i = next;
             }
+            i = next;
+            getchar();
         }else{
             i++;
         }
