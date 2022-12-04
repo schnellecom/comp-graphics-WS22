@@ -60,13 +60,17 @@ size_t prevnode(const size_t& i, const std::vector<bool>& clipped)
     size_t n = clipped.size();
     size_t res;
 
-    if(i == 0){
+    if(res == 0){
         res = n-1;
     }else{
         res = i-1;
     }
     while(clipped[res]){
-        res -= 1;
+        if(res == 0){
+            res = n-1;
+        }else{
+            res -= 1;
+        }
     }
     return res;
 }
@@ -111,21 +115,27 @@ void triangulate(const std::vector<glm::vec2>& vertices, std::vector<int>& trian
             size_t prev = prevnode(i, clipped);
             size_t next = nextnode(i, clipped);
 
-            std::cout << "previous: " << prev << ", current: " << curr << ", next: " << next << std::endl;
+
+            /* std::cout << "previous: " << prev << ", current: " << curr << ", next: " << next << std::endl;
             for(int l = 0; l < n; l++){
                 std::cout << clipped[l] << ",";
             }
             std::cout << std::endl;
+            */
             if(convex(vertices[prev], vertices[curr], vertices[next]) && triangleEmpty(prev, curr, next, vertices)){
                 triangles.push_back(prev);
                 triangles.push_back(curr);
                 triangles.push_back(next);
+
                 clipped[curr] = true;
             }
             i = next;
-            getchar();
         }else{
-            i++;
+            if(i = n-1){
+                i = 0;
+            }else{
+                i++;
+            }
         }
     }
 
