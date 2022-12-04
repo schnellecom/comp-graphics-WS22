@@ -70,6 +70,25 @@ void triangulate(const std::vector<glm::vec2>& vertices, std::vector<int>& trian
     // True iff the vertex has been clipped.
     std::vector<bool> clipped(n, false);
 
+    for(int i=0; i < n; i++){
+        int curr = i;
+        int next = i;
+        int prev = i;
+
+        if(curr == 0){
+            prev = n - 1;
+        }
+        else{
+            prev = curr - 1;
+        }
+        if(curr = n-1){
+            next = 0;
+        }
+        else{
+            next = curr + 1;
+        }
+    }
+
 }
 
 void initCustomResources()
