@@ -25,7 +25,8 @@ void main() {
     // It's important to normalize in the end
     //vec3 newNormal =
     //gl_Position = write the final vertex position into this variable
+    gl_Position = uProjectionMatrix*newPosition;
 
     // Define the color of this vertex
-    // vColor = 
+    vColor = vec3(1.0);
 }
