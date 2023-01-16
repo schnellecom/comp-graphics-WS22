@@ -81,6 +81,7 @@ void main() {
        reflectionColor[2] += 1;
        normalize(temp);
        vec2 sphereCoord = vec2(temp[0],temp[1]);
+//       vec2 sphereCoord = vec2(0,0);
        reflectionColor = vec3(texture(uTextureSphereMap, sphereCoord));
    }
 
@@ -89,7 +90,7 @@ void main() {
      oFragColor = vec4(fragColor, 1.0f);
    } else {
      // Part b: implement blending here
-     vec3 fragColor = lighingTerm; //Replace this line
+     vec3 fragColor = 0.9*lighingTerm + 0.1*reflectionColor; //Replace this line
      oFragColor = vec4(fragColor, 1.0f);
    }
 
