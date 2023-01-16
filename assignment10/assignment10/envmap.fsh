@@ -76,9 +76,12 @@ void main() {
      // calculate the reflectioncolor via cube mapping
      reflectionColor = vec3(texture(uTextureCubeMap, vec3(reflectionVector)));
    } else {
-     // Implement sphere mapping here by computing vec2 sphereCoord
-     vec2 sphereCoord = vec2(0,0);
-     reflectionColor = vec3(texture(uTextureSphereMap, sphereCoord));
+       // Implement sphere mapping here by computing vec2 sphereCoord
+       vec3 temp = reflectionVector;
+       reflectionColor[2] += 1;
+       normalize(temp);
+       vec2 sphereCoord = vec2(temp[0],temp[1]);
+       reflectionColor = vec3(texture(uTextureSphereMap, sphereCoord));
    }
 
    if (uEnvironmentOnly) {
